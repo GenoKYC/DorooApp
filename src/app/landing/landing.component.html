@@ -9,11 +9,50 @@
   class="min-h-screen bg-[#000000] text-white p-8 flex flex-col justify-between"
 >
   <div class="mx-auto px-16">
-    <header class="p-10 mb-5">
+    <header class="p-10 mb-5 flex justify-between items-center">
+      <!-- Left side -->
       <div class="max-w-[500px]">
-        <!-- Match left section width -->
         <h1 class="text-6xl font-bold pt-4 text-[#DFDEDE]">Doroo</h1>
         <p class="text-xl mt-2 text-[#DFDEDE]">Focus on what matters</p>
+      </div>
+
+      <!-- Right side: profile icon with dropdown -->
+      <div class="dropdown dropdown-end">
+        <div
+          tabindex="0"
+          role="button"
+          class="text-[#DFDEDE] hover:text-white cursor-pointer"
+        >
+          <!-- Profile Icon -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-8 h-8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 
+             2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 
+             0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 
+             1-5.982-2.275M15 9.75a3 3 0 1 1-6 
+             0 3 3 0 0 1 6 0Z"
+            />
+          </svg>
+        </div>
+
+        <!-- Dropdown menu -->
+        <ul
+          tabindex="0"
+          class="dropdown-content menu p-2 shadow rounded-box w-52 bg-[#3B3735] text-[#DFDEDE]"
+        >
+          <li><a class="hover:bg-[#4A4543]" href="/login">Profile</a></li>
+          <li><a class="hover:bg-[#4A4543]" href="/login">Settings</a></li>
+          <li><a class="hover:bg-[#4A4543]" href="/login">Logout</a></li>
+        </ul>
       </div>
     </header>
 
