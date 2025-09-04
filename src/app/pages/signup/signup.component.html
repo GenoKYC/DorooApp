@@ -1,3 +1,5 @@
+<app-toast [message]="toastMessage" [type]="toastType"></app-toast>
+
 <div class="min-h-screen bg-black flex items-center justify-center px-4">
   <!-- Signup Card -->
   <div class="bg-[#3B3636] p-6 rounded-lg w-full max-w-xs space-y-5">
@@ -6,10 +8,19 @@
       <p class="text-gray-300 text-sm">Create your account</p>
     </div>
 
+    <!-- Name -->
+    <input
+      type="text"
+      placeholder="Enter your name"
+      [(ngModel)]="name"
+      class="border border-gray-300 rounded px-2 py-1.5 bg-[#C9BFBF] text-[#3B3838] w-full placeholder-[#797575] text-sm"
+    />
+
     <!-- Email -->
     <input
       type="email"
       placeholder="Enter your email"
+      [(ngModel)]="email"
       class="border border-gray-300 rounded px-2 py-1.5 bg-[#C9BFBF] text-[#3B3838] w-full placeholder-[#797575] text-sm"
     />
 
@@ -17,8 +28,10 @@
     <input
       type="password"
       placeholder="Create your password"
+      [(ngModel)]="password"
       class="border border-gray-300 rounded px-2 py-1.5 bg-[#C9BFBF] text-[#3B3838] w-full placeholder-[#797575] text-sm"
     />
+
     <label class="flex items-center gap-2 text-gray-300 text-xs">
       <input type="checkbox" class="checkbox checkbox-xs checkbox-primary" />
       I agree to the
@@ -26,12 +39,16 @@
         >Terms & Conditions</a
       >
     </label>
+
     <!-- Signup Button -->
     <button
+      (click)="onSignup()"
       class="bg-[#D8CBC9] text-[#504d4d] hover:bg-[#cbbeba] py-1 w-[96px] font-semibold block mx-auto rounded-md text-sm"
     >
       Sign Up
     </button>
+
+    <p class="text-center text-green-400 text-xs">{{ message }}</p>
 
     <!-- Divider -->
     <div class="flex items-center">
@@ -50,18 +67,6 @@
         alt="Google Logo"
       />
       Sign up with Google
-    </button>
-
-    <!-- Facebook SSO -->
-    <button
-      class="w-full bg-[#1877F2] text-white hover:bg-[#145dbf] flex items-center justify-center gap-2 rounded-lg py-1 text-sm"
-    >
-      <img
-        src="https://www.svgrepo.com/show/452196/facebook-1.svg"
-        class="w-4 h-4"
-        alt="Facebook Logo"
-      />
-      Sign up with Facebook
     </button>
 
     <!-- Login Link -->

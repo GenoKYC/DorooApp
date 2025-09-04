@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { TaskService } from '../services/task.service'; // ✅ import service
 
 interface Task {
-  name: string;
-  dueDate: string;
+  _id?: string; // from DB
+  title: string;
+  deadline: string;
   completed: boolean;
 }
 
@@ -17,24 +18,29 @@ interface Task {
   styleUrl: './landing.component.css',
 })
 export class LandingComponent implements OnInit, OnDestroy {
-  timeLeft: number = 25 * 60; // <- correct initial value (25 min)
+  // Pomodoro timer state
+  timeLeft: number = 25 * 60;
   timer: any = null;
   isRunning: boolean = false;
   currentMode: 'pomodoro' | 'short' | 'long' = 'pomodoro';
 
-  // Tasks ...
+  // Tasks state
   tasks: Task[] = [];
   newTaskName = '';
   newTaskDueDate = '';
 
+  constructor(private taskService: TaskService) {}
+
   ngOnInit() {
-    this.setTimeByMode(this.currentMode); // ensure consistent startup value
+    this.setTimeByMode(this.currentMode);
+    this.loadTasks(); // ✅ load from DB
   }
 
   ngOnDestroy() {
     this.stopTimer();
   }
 
+  // ⏰ Timer (unchanged)
   get formattedTime(): string {
     const minutes = Math.floor(this.timeLeft / 60)
       .toString()
@@ -42,15 +48,12 @@ export class LandingComponent implements OnInit, OnDestroy {
     const seconds = (this.timeLeft % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   }
+
   startOrPauseTimer() {
-    if (this.isRunning) {
-      // If timer is running, pause it
-      this.stopTimer();
-    } else {
-      // If timer is paused/stopped, start it
-      this.startTimer();
-    }
+    if (this.isRunning) this.stopTimer();
+    else this.startTimer();
   }
+
   startTimer() {
     if (this.isRunning) return;
     this.isRunning = true;
@@ -87,23 +90,50 @@ export class LandingComponent implements OnInit, OnDestroy {
     else this.timeLeft = 15 * 60;
   }
 
-  // Task methods (unchanged)
-  addTask() {
-    if (!this.newTaskName.trim() || !this.newTaskDueDate) return;
-    this.tasks.push({
-      name: this.newTaskName.trim(),
-      dueDate: this.newTaskDueDate,
-      completed: false,
+  // ✅ Task methods (now call API)
+  loadTasks() {
+    this.taskService.getTasks().subscribe({
+      next: (tasks) => (this.tasks = tasks),
+      error: (err) => console.error(err),
     });
-    this.newTaskName = '';
-    this.newTaskDueDate = '';
   }
 
-  toggleComplete(i: number) {
-    this.tasks[i].completed = !this.tasks[i].completed;
+  addTask() {
+    if (!this.newTaskName.trim() || !this.newTaskDueDate) return;
+
+    this.taskService
+      .addTask({
+        title: this.newTaskName.trim(),
+        deadline: this.newTaskDueDate,
+        completed: false, // ✅ make sure checkbox works
+      })
+      .subscribe({
+        next: (task) => {
+          // Ensure deadline is a Date object
+          const fixedTask = {
+            ...task,
+            deadline: new Date(task.deadline),
+          };
+
+          this.tasks.push(fixedTask);
+          this.newTaskName = '';
+          this.newTaskDueDate = '';
+        },
+        error: (err) => console.error(err),
+      });
+  }
+
+  toggleComplete(index: number) {
+    this.tasks[index].completed = !this.tasks[index].completed;
   }
 
   deleteTask(i: number) {
-    this.tasks.splice(i, 1);
+    const task = this.tasks[i];
+    if (!task._id) return;
+
+    this.taskService.deleteTask(task._id).subscribe({
+      next: () => this.tasks.splice(i, 1),
+      error: (err) => console.error(err),
+    });
   }
 }

@@ -189,10 +189,10 @@
                       [class.line-through]="task.completed"
                       class="font-semibold"
                     >
-                      {{ task.name }}
+                      {{ task.title }}
                     </h3>
                     <p class="text-xs font-medium text-[#9C9898]">
-                      Due: {{ task.dueDate }}
+                      Due: {{ task.deadline | date : "mediumDate" }}
                     </p>
                   </div>
                 </div>
