@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskService } from '../services/task.service'; // ✅ import service
+import { TaskService } from '../services/task.service';
 
 interface Task {
-  _id?: string; // from DB
+  _id?: string;
   title: string;
-  deadline: string;
+  dueDate: string | Date; // allow both
   completed: boolean;
 }
 
@@ -31,16 +31,16 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   constructor(private taskService: TaskService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.setTimeByMode(this.currentMode);
-    this.loadTasks(); // ✅ load from DB
+    this.loadTasks();
   }
 
   ngOnDestroy() {
     this.stopTimer();
   }
 
-  // ⏰ Timer (unchanged)
+  // ⏰ POMODORO TIMER
   get formattedTime(): string {
     const minutes = Math.floor(this.timeLeft / 60)
       .toString()
@@ -90,10 +90,21 @@ export class LandingComponent implements OnInit, OnDestroy {
     else this.timeLeft = 15 * 60;
   }
 
-  // ✅ Task methods (now call API)
+  // 🔥 TASKS
+  private sortTasks() {
+    this.tasks.sort((a, b) => {
+      const dateA = new Date(a.dueDate).getTime();
+      const dateB = new Date(b.dueDate).getTime();
+      return dateA - dateB; // earliest first
+    });
+  }
+
   loadTasks() {
     this.taskService.getTasks().subscribe({
-      next: (tasks) => (this.tasks = tasks),
+      next: (tasks) => {
+        this.tasks = tasks;
+        this.sortTasks(); // ✅ auto-sort after loading
+      },
       error: (err) => console.error(err),
     });
   }
@@ -104,18 +115,13 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.taskService
       .addTask({
         title: this.newTaskName.trim(),
-        deadline: this.newTaskDueDate,
-        completed: false, // ✅ make sure checkbox works
+        dueDate: this.newTaskDueDate,
+        completed: false,
       })
       .subscribe({
         next: (task) => {
-          // Ensure deadline is a Date object
-          const fixedTask = {
-            ...task,
-            deadline: new Date(task.deadline),
-          };
-
-          this.tasks.push(fixedTask);
+          this.tasks.push(task);
+          this.sortTasks(); // ✅ keep sorted after adding
           this.newTaskName = '';
           this.newTaskDueDate = '';
         },
@@ -125,6 +131,15 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   toggleComplete(index: number) {
     this.tasks[index].completed = !this.tasks[index].completed;
+
+    const task = this.tasks[index];
+    if (task._id) {
+      this.taskService
+        .updateTask(task._id, { completed: task.completed })
+        .subscribe({
+          error: (err) => console.error(err),
+        });
+    }
   }
 
   deleteTask(i: number) {
@@ -132,7 +147,10 @@ export class LandingComponent implements OnInit, OnDestroy {
     if (!task._id) return;
 
     this.taskService.deleteTask(task._id).subscribe({
-      next: () => this.tasks.splice(i, 1),
+      next: () => {
+        this.tasks.splice(i, 1);
+        this.sortTasks(); // ✅ keep sorted after deleting
+      },
       error: (err) => console.error(err),
     });
   }

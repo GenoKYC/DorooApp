@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 🌙 Night Mode (default) */
+:root {
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-color: #e0e0e0;
+  --muted-text: #a0a0a0;
+  --accent-color: #4caf50;
+}
+
+/* ☀️ Light Mode */
+.light-theme {
+  --bg-color: #f9f9f9;
+  --surface-color: #ffffff;
+  --text-color: #222222;
+  --muted-text: #666666;
+  --accent-color: #3b82f6;
+}

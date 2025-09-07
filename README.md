@@ -1,10 +1,10 @@
-# 📘 Time Tracker – Implementation Documentation & Project Foundation
+# 📘 Doroo– Implementation Documentation & Project Foundation
 
 ## 1. Project Overview
 
 ### **Project Name:**
 
-**Time Tracker (Doroo)**
+**Doroo**
 
 ### **Problem Statement**
 

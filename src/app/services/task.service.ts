@@ -16,7 +16,7 @@ export class TaskService {
 
   addTask(task: {
     title: string;
-    deadline?: string;
+    dueDate: string;
     completed: boolean;
   }): Observable<any> {
     return this.http.post(this.API_URL, task, { withCredentials: true });
