@@ -1,225 +1,228 @@
-# 📘 Doroo– Implementation Documentation & Project Foundation
+# 📘 Doroo – Implementation Documentation & Project Foundation
 
-## 1. Project Overview
+## 1. Project Foundation
 
-### **Project Name:**
+### **Project Name**
 
 **Doroo**
 
 ### **Problem Statement**
 
-In today’s fast-paced environment, many individuals and teams struggle with **managing time efficiently** and **tracking productivity**. Common issues include:
+In the digital age, people often struggle with **managing focus time and tasks simultaneously**.
 
-- Difficulty in balancing focused work sessions with proper breaks.
-- Poor task management leading to missed deadlines.
-- Lack of structured workflows for individuals working remotely or in study environments.
+- Students face difficulties staying consistent during study sessions.
+- Remote workers juggle deadlines without a structured flow.
+- Standard to-do apps lack **time-blocking productivity methods**.
+
+Without a tool that **combines time management with task organization**, productivity often drops, and deadlines are missed.
+
+---
 
 ### **Solution Overview**
 
-The **Time Tracker** web application provides a simple yet effective solution by combining a **Pomodoro timer** with a **task management system**.
+**Doroo** is a **web-based productivity app** that integrates a **Pomodoro timer** with a **task manager**.
 
-- The **Pomodoro Technique** enhances productivity by structuring work and break intervals.
-- The **Task Manager** helps users list, organize, and track deadlines.
-- The application is built with **Angular** for front-end interactivity, **Tailwind CSS** for responsive styling, and **MongoDB** for persistent task storage.
+- The **Pomodoro timer** keeps users focused with structured work/break sessions.
+- The **task manager** allows users to create, track, and complete tasks with deadlines.
+- Data is **persisted in MongoDB**, ensuring tasks remain available across sessions.
+- A clean **Angular + Tailwind** interface makes the experience smooth and responsive.
 
----
-
-## 2. Tech Stack & Tools
-
-### **Frontend**
-
-- **TypeScript + Angular** → Component-driven structure, reactive forms, service-based APIs.
-- **Tailwind CSS + DaisyUI** → Utility-first CSS framework for responsive UI and prebuilt UI patterns.
-
-### **Backend**
-
-- **Node.js + Express.js** → REST API endpoints to handle tasks and authentication.
-- **MongoDB + Mongoose** → Document database for storing user tasks, deadlines, and status.
-
-### **Other Tools**
-
-- **JWT (JSON Web Tokens)** → Authentication and user session handling.
-- **Axios/HttpClient (Angular)** → For making API calls.
-- **GitHub / Git** → Version control.
+**Key Value:** Doroo bridges the gap between **time discipline** and **task accountability**.
 
 ---
 
-## 3. Features Analysis & Planning
+### **Features Analysis & Planning**
 
-### ✅ **Core Features**
+#### ✅ Core Features (MVP)
 
 1. **Pomodoro Timer**
 
-   - Modes: Pomodoro (25 mins), Short Break (5 mins), Long Break (15 mins).
-   - Timer with start, pause, and reset functionality.
-   - Automatically switches between work and break sessions.
+   - Work, Short Break, Long Break modes.
+   - Start, pause, reset functionality.
+   - Automatic switching between sessions.
 
 2. **Task Manager**
 
-   - Add, edit, and delete tasks.
-   - Set **deadlines** for tasks.
-   - Mark tasks as **completed/incomplete**.
-   - Tasks displayed in a **scrollable list** with deadline info.
+   - Add new tasks with deadlines.
+   - View task list.
+   - Mark tasks as completed/incomplete.
+   - Delete tasks.
 
-3. **User Authentication**
+3. **Persistence (Database)**
 
-   - Sign up & log in (optional for local use, but needed for multi-user).
-   - Secure JWT authentication for backend requests.
+   - Store tasks per user in **MongoDB**.
+   - Retrieve saved tasks when user returns.
 
-4. **Responsive UI**
+4. **Authentication**
 
-   - Mobile-first design.
-   - Dynamic grid switching (`grid-cols-1 → md:grid-cols-2`).
-   - Task manager & timer stack vertically on mobile.
+   - User registration & login (secure with bcrypt & sessions/JWT).
+   - Personal task tracking per account.
 
-5. **Persistence**
+#### 🚀 Future Enhancements
 
-   - All tasks saved in **MongoDB**.
-   - Authenticated users can retrieve tasks across sessions.
-
----
-
-## 4. Project Foundation Flow (Conceptual Flow)
-
-This is the **end-to-end flow** of the application.
-
-### **Step 1: User Journey**
-
-1. User visits the website → sees the **Landing Page** with **Timer + Task Manager**.
-2. User either:
-
-   - Starts the **Pomodoro Timer**, or
-   - Adds tasks with deadlines in the **Task Manager**.
-
-3. Tasks are stored in **MongoDB via API calls**.
-4. Timer session and tasks help the user **focus and track progress**.
-
-### **Step 2: Application Flow**
-
-1. **Frontend (Angular)**
-
-   - Components:
-
-     - `TimerComponent` → Handles Pomodoro logic.
-     - `TaskComponent` → Handles task CRUD (create, read, update, delete).
-     - `AuthComponent` → Login & signup.
-
-   - Services:
-
-     - `TaskService` → Calls backend `/api/tasks` endpoints.
-     - `AuthService` → Manages authentication & tokens.
-
-2. **Backend (Node.js + Express)**
-
-   - Endpoints:
-
-     - `POST /api/auth/login` → User login.
-     - `POST /api/auth/register` → Register new user.
-     - `GET /api/tasks` → Get all tasks for logged-in user.
-     - `POST /api/tasks` → Add task.
-     - `PUT /api/tasks/:id` → Update task (mark complete, change deadline).
-     - `DELETE /api/tasks/:id` → Delete task.
-
-3. **Database (MongoDB)**
-
-   - **Collections**:
-
-     - `users`
-
-       ```ts
-       {
-         _id: ObjectId,
-         username: string,
-         email: string,
-         passwordHash: string
-       }
-       ```
-
-     - `tasks`
-
-       ```ts
-       {
-         _id: ObjectId,
-         userId: ObjectId,
-         title: string,
-         deadline: Date,
-         completed: boolean
-       }
-       ```
+- Task categories/tags.
+- Weekly productivity analytics.
+- Notifications when Pomodoro session ends.
+- Collaboration: Shared task boards.
 
 ---
 
-## 5. Implementation Documentation
+## 2. Tech Stack
 
-### **Frontend Implementation**
+### **Frontend**
 
-1. **Setup Angular Project**
+- **Angular (TypeScript)** → Component-based structure, state management, service-driven APIs.
+- **Tailwind CSS + DaisyUI** → Utility-first CSS framework + prebuilt UI patterns for fast styling.
 
-   ```bash
-   ng new time-tracker --style=css --routing
-   cd time-tracker
-   npm install tailwindcss daisyui
-   ```
+### **Backend**
 
-   Configure `tailwind.config.js`.
+- **Node.js + Express.js** → REST API services for tasks & authentication.
+- **MongoDB (via Mongoose)** → Stores user accounts & tasks.
 
-2. **Components**
+### **Other Tools**
 
-   - `LandingComponent` → Main layout (Timer + Task Manager).
-   - `TimerComponent` → Controls countdown logic.
-   - `TaskListComponent` → Displays tasks.
-   - `TaskInputComponent` → Input new tasks.
-   - `AuthComponent` → Login/Signup forms.
-
-3. **Services**
-
-   - `task.service.ts` → Handles CRUD with backend.
-   - `auth.service.ts` → Handles login/register, stores JWT in `localStorage`.
-
-4. **State Management**
-
-   - Use Angular `BehaviorSubject` to keep tasks updated across components.
+- **bcryptjs** → Secure password hashing.
+- **express-session / JWT** → Session handling & authentication.
+- **GitHub/Git** → Version control.
 
 ---
 
-### **Backend Implementation**
+## 3. Foundation Flow (Website Concept Flow)
 
-1. **Setup Node.js & Express**
+### **User Flow**
 
-   ```bash
-   mkdir backend && cd backend
-   npm init -y
-   npm install express mongoose cors bcryptjs jsonwebtoken
-   ```
+1. **Landing Page**
 
-   - `server.js` → Entry point.
+   - Timer is visible.
+   - Task input field with deadline selector.
 
-2. **Models**
+2. **Task Flow**
 
-   - `User.js`
-   - `Task.js` (with fields: `title`, `deadline`, `completed`, `userId`)
+   - User adds a task → stored in MongoDB.
+   - User can **check/uncheck** tasks as completed.
+   - Tasks appear in a scrollable list.
 
-3. **Routes**
+3. **Timer Flow**
 
-   - `auth.routes.js` → Register/Login.
-   - `task.routes.js` → CRUD endpoints.
+   - User starts Pomodoro.
+   - Countdown updates in real-time.
+   - Notification (future feature) when session ends.
 
-4. **Middleware**
+4. **Authentication Flow**
 
-   - `authMiddleware.js` → Protects task routes with JWT.
-
-5. **Run Backend**
-
-   ```bash
-   node server.js
-   ```
+   - Register → create new account.
+   - Login → load personal tasks.
+   - Logout → clear session.
 
 ---
 
-## 6. Roadmap (Future Enhancements)
+## 4. Implementation Documentation
 
-- Notifications when Pomodoro ends.
-- Categories/tags for tasks.
-- Weekly productivity reports.
-- Drag-and-drop task ordering.
-- Team support (shared tasks).
+### **Frontend (Angular)**
+
+#### 1. Project Setup
+
+```bash
+ng new doroo --style=css --routing
+cd doroo
+npm install tailwindcss daisyui
+```
+
+Configure `tailwind.config.js` to enable Tailwind + DaisyUI.
+
+#### 2. Components
+
+- `landing.component.ts/html/css` → Combines Timer + Task Manager.
+- `timer.component.ts` → Handles Pomodoro logic.
+- `task-list.component.ts` → Displays tasks.
+- `task-input.component.ts` → Form for adding new tasks.
+- `auth.component.ts` → Login/Signup UI.
+
+#### 3. Services
+
+- `task.service.ts` → Handles CRUD with `/api/tasks`.
+- `auth.service.ts` → Handles authentication with `/api/auth`.
+
+---
+
+### **Backend (Node + Express)**
+
+#### 1. Project Setup
+
+```bash
+mkdir backend && cd backend
+npm init -y
+npm install express mongoose cors bcryptjs express-session connect-mongo dotenv
+```
+
+#### 2. Models
+
+- **User Model (`User.js`)**
+
+  ```ts
+  {
+    name: String,
+    email: String,
+    password: String
+  }
+  ```
+
+- **Task Model (`Task.js`)**
+
+  ```ts
+  {
+    user: ObjectId,
+    title: String,
+    deadline: Date,
+    completed: { type: Boolean, default: false }
+  }
+  ```
+
+#### 3. Routes
+
+- `auth.js` → Register, Login, Logout, Profile.
+- `tasks.js` → CRUD for tasks (protected by authentication).
+
+#### 4. Middleware
+
+- `authMiddleware.js` → Ensures only logged-in users access `/api/tasks`.
+
+---
+
+## 5. Database (MongoDB)
+
+### Collections
+
+- **Users** → Store account credentials.
+- **Tasks** → Store tasks linked to a `userId`.
+
+---
+
+## 6. System Architecture
+
+**Frontend (Angular)** ↔ **Backend (Express.js)** ↔ **Database (MongoDB)**
+
+- Angular calls Express REST APIs using `HttpClient`.
+- Express authenticates users and forwards valid requests.
+- MongoDB stores and retrieves data.
+
+---
+
+## 7. Roadmap
+
+**Phase 1 (MVP):**
+
+- Pomodoro timer + Task manager.
+- Authentication (basic login/register).
+- Task persistence in DB.
+
+**Phase 2:**
+
+- Notifications.
+- Task categories.
+- Dark mode theme.
+
+**Phase 3:**
+
+- Shared tasks / Team productivity features.
+- Export productivity reports.
